@@ -1,38 +1,50 @@
-import fs from 'node:fs';
-import path from 'node:path';
+import fs from 'fs';
+import { STORAGE_PATH } from './config';
 
-type StorageData = Record<string, any>;
+export interface PlayerData {
+  userId: number;
+  resources: {
+    gold: number;
+    wood: number;
+    rum: number;
+    crew: number;
+  };
+  shipLevel: number;
+  lastRaid: number; // timestamp
+  wins: number;
+}
 
-const FILE = path.resolve(process.cwd(), 'storage.json');
-
-function readAll(): StorageData {
-  if (!fs.existsSync(FILE)) return {};
-  const raw = fs.readFileSync(FILE, 'utf-8');
-  if (!raw.trim()) return {};
+export function loadData(): Record<number, PlayerData> {
   try {
-    return JSON.parse(raw) as StorageData;
+    const raw = fs.readFileSync(STORAGE_PATH, 'utf-8');
+    return JSON.parse(raw);
   } catch {
     return {};
   }
 }
 
-function writeAll(data: StorageData) {
-  fs.writeFileSync(FILE, JSON.stringify(data, null, 2), 'utf-8');
+export function saveData(data: Record<number, PlayerData>) {
+  fs.writeFileSync(STORAGE_PATH, JSON.stringify(data, null, 2));
 }
 
-export class Storage {
-  private key(userId: number) {
-    return String(userId);
+export function getPlayer(userId: number): PlayerData {
+  const data = loadData();
+  if (!data[userId]) {
+    data[userId] = {
+      userId,
+      resources: { gold: 100, wood: 50, rum: 20, crew: 10 },
+      shipLevel: 1,
+      lastRaid: 0,
+      wins: 0,
+    };
+    saveData(data);
   }
+  return data[userId];
+}
 
-  getUser<T>(userId: number): T | null {
-    const data = readAll();
-    return (data[this.key(userId)] ?? null) as T | null;
-  }
-
-  setUser(userId: number, value: any) {
-    const data = readAll();
-    data[this.key(userId)] = value;
-    writeAll(data);
-  }
+export function updatePlayer(userId: number, updates: Partial<PlayerData>) {
+  const data = loadData();
+  if (!data[userId]) return;
+  data[userId] = { ...data[userId], ...updates };
+  saveData(data);
 }
