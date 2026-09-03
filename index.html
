@@ -2,114 +2,90 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Пираты: Владыки Морей</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Пиратское Море</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
-        body {
-            background-color: #0d1b2a; /* Темно-синяя морская тема */
-            color: #e0e1dd;
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 15px;
-            text-align: center;
-        }
-        .header {
-            background-color: #1b263b;
-            padding: 12px;
-            font-size: 22px;
-            font-weight: bold;
-            border: 2px solid #e0a96d; /* Золотая рамка */
-            color: #f0a500;
-            margin-bottom: 15px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-        .banner {
-            width: 100%;
-            max-width: 400px;
-            border: 2px solid #e0a96d;
-            border-radius: 8px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
-        }
-        .description {
-            font-size: 14px;
-            line-height: 1.5;
-            margin: 15px 0;
-            color: #d4a373;
-            background-color: rgba(27, 38, 59, 0.6);
-            padding: 12px;
-            border-radius: 6px;
-            border-left: 3px solid #f0a500;
-        }
-        .btn-main {
-            background: linear-gradient(to bottom, #b71c1c, #7f0000); /* Красный пиратский градиент */
-            color: #ffffff;
-            border: 2px solid #f0a500;
-            padding: 14px 30px;
-            font-size: 18px;
-            font-weight: bold;
-            border-radius: 25px;
-            cursor: pointer;
-            width: 85%;
-            margin: 15px auto;
-            display: block;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.4);
-        }
-        .btn-main:active {
-            transform: scale(0.98);
-        }
-        .nav-menu {
-            background-color: #1b263b;
-            border: 1px solid #e0a96d;
-            border-radius: 6px;
-            margin-top: 20px;
-            padding: 5px;
-            text-align: left;
-        }
-        .nav-item {
-            padding: 10px;
-            border-bottom: 1px solid #415a77;
-            color: #e0e1dd;
-            text-decoration: none;
-            display: block;
-            font-size: 14px;
-        }
-        .nav-item:last-child {
-            border-bottom: none;
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; }
+        body { background: #0e1621; color: #fff; font-family: sans-serif; text-align: center; overflow: hidden; }
+        #game-container { position: relative; width: 100vw; height: 80vh; background: #1b4965; overflow: hidden; }
+        .ship { position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%); font-size: 48px; transition: left 0.1s linear; }
+        .target { position: absolute; font-size: 32px; top: -50px; }
+        #ui { height: 20vh; display: flex; flex-direction: column; justify-content: center; align-items: center; background: #0f2537; gap: 10px; }
+        .controls { display: flex; gap: 20px; }
+        button { background: #e63946; color: white; border: none; padding: 12px 24px; font-size: 18px; font-weight: bold; border-radius: 8px; cursor: pointer; }
+        button:active { background: #c1121f; }
+        #score-board { font-size: 20px; color: #ffb703; font-weight: bold; }
     </style>
 </head>
 <body>
 
-    <div class="header">🏴‍☠️ ПИРАТЫ: СЕМЬ МОРЕЙ 🏴‍☠️</div>
-
-    <!-- Баннер с пиратской тематикой -->
-    <img src="https://via.placeholder.com/400x180/1b263b/f0a500?text=Pirate+Saga+RPG" class="banner" alt="Пираты">
-
-    <div class="description">
-        Приветствую тебя, отважный Капитан!<br><br>
-        Поднимай черные паруса и отправляйся на поиски сокровищ. 
-        Грабишь торговые шхуны, сражайся с морскими чудовищами, создавай свой корсарский клан и захватывай порты!
+    <div id="game-container">
+        <div id="ship" class="ship">🏴‍☠️</div>
     </div>
 
-    <button class="btn-main" onclick="startGame()">Поднять паруса!</button>
-
-    <div class="nav-menu">
-        <div class="nav-item">⚓ Мой Корабль</div>
-        <div class="nav-item">⚔️ Морской Абордаж</div>
-        <div class="nav-item">🏴‍☠️ Пиратская Братва (Кланы)</div>
-        <div class="nav-item">💰 Чёрный Рынок</div>
+    <div id="ui">
+        <div id="score-board">Пиастры: <span id="score">0</span> 🪙</div>
+        <div class="controls">
+            <button onclick="moveShip(-30)">⬅️ Влево</button>
+            <button onclick="moveShip(30)">Вправо ➡️</button>
+        </div>
     </div>
 
     <script>
         const tg = window.Telegram.WebApp;
-        tg.expand(); // Разворачиваем приложение на весь экран
+        tg.expand();
 
-        function startGame() {
-            alert("Набираем команду и готовим пушки...");
-            // В дальнейшем здесь будет отправка данных на сервер Python
+        let score = 0;
+        let shipPos = window.innerWidth / 2;
+        const ship = document.getElementById('ship');
+        const container = document.getElementById('game-container');
+
+        function moveShip(offset) {
+            shipPos = Math.max(30, Math.min(window.innerWidth - 30, shipPos + offset));
+            ship.style.left = shipPos + 'px';
         }
+
+        function spawnTarget() {
+            const target = document.createElement('div');
+            target.className = 'target';
+            const isChest = Math.random() > 0.3;
+            target.innerText = isChest ? '🪙' : '💣';
+            target.dataset.type = isChest ? 'coin' : 'bomb';
+            
+            const randomX = Math.random() * (window.innerWidth - 40) + 20;
+            target.style.left = randomX + 'px';
+            container.appendChild(target);
+
+            let top = -50;
+            const fallInterval = setInterval(() => {
+                top += 4;
+                target.style.top = top + 'px';
+
+                // Проверка столкновения
+                if (top > window.innerHeight * 0.8 - 60 && top < window.innerHeight * 0.8) {
+                    const targetX = parseFloat(target.style.left);
+                    if (Math.abs(targetX - shipPos) < 40) {
+                        if (target.dataset.type === 'coin') {
+                            score += 10;
+                            document.getElementById('score').innerText = score;
+                        } else {
+                            score = Math.max(0, score - 20);
+                            document.getElementById('score').innerText = score;
+                        }
+                        clearInterval(fallInterval);
+                        target.remove();
+                    }
+                }
+
+                if (top > window.innerHeight * 0.8) {
+                    clearInterval(fallInterval);
+                    target.remove();
+                }
+            }, 30);
+        }
+
+        setInterval(spawnTarget, 1500);
     </script>
 </body>
 </html>
