@@ -54,7 +54,7 @@ def get_captain(user_id, username):
 # Главное меню бота (включает кнопку перехода в WebApp)
 def main_keyboard():
     # Замените ссылку ниже на вашу ссылку из GitHub Pages после ее активации
-    WEB_APP_URL = "https://your-github-username.github.io/game_bot/" 
+    WEB_APP_URL = "https://stormork.github.io/game_bot/" 
     
     keyboard = InlineKeyboardMarkup(inline_keyboard=[
         [InlineKeyboardButton(text="🏴‍☠️ Играть (Открыть Корабль)", web_app=WebAppInfo(url=WEB_APP_URL))],
