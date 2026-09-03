@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>North & South: Viking MMORPG</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; }
+        body { background: #090d16; color: #e2e8f0; font-family: 'Segoe UI', Tahoma, sans-serif; display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
+        
+        header { background: #111827; padding: 10px 15px; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px: solid #1f2937; font-size: 13px; }
+        .stat-group { display: flex; gap: 12px; }
+        .stat { color: #f59e0b; font-weight: bold; }
+
+        #main-screen { flex: 1; padding: 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 15px; }
+        
+        .card { background: #131b2e; border: 1px solid #1f2937; border-radius: 12px; padding: 15px; }
+        .card h3 { color: #60a5fa; margin-bottom: 8px; font-size: 16px; }
+        .card p { font-size: 14px; color: #94a3b8; line-height: 1.4; margin-bottom: 12px; }
+
+        .btn { background: #2563eb; color: white; border: none; padding: 10px 16px; font-size: 14px; font-weight: bold; border-radius: 8px; cursor: pointer; width: 100%; transition: background 0.2s; }
+        .btn:active { background: #1d4ed8; }
+        .btn-danger { background: #dc2626; }
+        .btn-danger:active { background: #b91c1c; }
+
+        nav { background: #111827; display: flex; justify-content: space-around; padding: 10px; border-top: 2px solid #1f2937; }
+        .nav-btn { background: none; border: none; color: #94a3b8; font-size: 12px; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 4px; }
+        .nav-btn.active { color: #60a5fa; font-weight: bold; }
+        .nav-icon { font-size: 20px; }
+
+        .log-box { background: #0b0f19; border: 1px solid #1e293b; padding: 10px; border-radius: 8px; font-family: monospace; font-size: 12px; max-height: 120px; overflow-y: auto; color: #34d399; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div><span id="player-name">Викинг</span> [Ур. <span id="level">1</span>]</div>
+        <div class="stat-group">
+            <div>❤️ <span id="hp">100</span></div>
+            <div>🪙 <span id="gold">50</span></div>
+        </div>
+    </header>
+
+    <div id="main-screen">
+        <!-- Динамический контент вкладок -->
+        <div id="content-area"></div>
+    </div>
+
+    <nav>
+        <button class="nav-btn active" onclick="switchTab('world')">
+            <span class="nav-icon">🗺️</span>Мир
+        </button>
+        <button class="nav-btn" onclick="switchTab('quests')">
+            <span class="nav-icon">📜</span>Походы
+        </button>
+        <button class="nav-btn" onclick="switchTab('arena')">
+            <span class="nav-icon">⚔️</span>Арена
+        </button>
+        <button class="nav-btn" onclick="switchTab('profile')">
+            <span class="nav-icon">🛡️</span>Герой
+        </button>
+    </nav>
+
+    <script>
+        const tg = window.Telegram.WebApp;
+        tg.expand();
+
+        let player = {
+            name: tg.initDataUnsafe?.user?.first_name || "Рагнар",
+            level: 1,
+            hp: 100,
+            maxHp: 100,
+            gold: 50,
+            exp: 0,
+            attack: 15
+        };
+
+        function updateHeader() {
+            document.getElementById('player-name').innerText = player.name;
+            document.getElementById('level').innerText = player.level;
+            document.getElementById('hp').innerText = player.hp;
+            document.getElementById('gold').innerText = player.gold;
+        }
+
+        function switchTab(tab) {
+            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+            event.currentTarget.classList.add('active');
+
+            const area = document.getElementById('content-area');
+            
+            if (tab === 'world') {
+                area.innerHTML = `
+                    <div class="card">
+                        <h3>🏴‍☠️ Портовая Таверна «Северный Клык»</h3>
+                        <p>Центр притяжения всех отчаянных голов и ярлов. Здесь можно найти попутчиков или выпить эля с местными торговцами.</p>
+                        <button class="btn" onclick="logAction('Вы пропустили кружку меда с берсерками. Силы восстановились!')">Выпить медового эля (+20 HP)</button>
+                    </div>
+                    <div class="card">
+                        <h3>🪵 Верфь Драккаров</h3>
+                        <p>Место, где рождаются легендарные корабли для набегов на южные земли.</p>
+                        <button class="btn" onclick="logAction('Ваш клан усилил обшивку драккара.')">Улучшить драккар (100 🪙)</button>
+                    </div>
+                `;
+            } else if (tab === 'quests') {
+                area.innerHTML = `
+                    <div class="card">
+                        <h3>🪓 Набег на прибрежное селение</h3>
+                        <p>Соберите боевой отряд и совершите стремительный набег за золотом и славой.</p>
+                        <button class="btn" onclick="startQuest(30, 40, 'Успешный набег! Захвачено 40 монет.')">Отправиться в набег</button>
+                    </div>
+                    <div class="card">
+                        <h3>🐉 Охота на морского змея</h3>
+                        <p>Чудовище из глубин пугает рыбаков. Награда высока, но бой будет смертельным.</p>
+                        <button class="btn btn-danger" onclick="startQuest(60, 100, 'Легендарная победа над змеем! Получено 100 монет!')">Сразиться со змеем</button>
+                    </div>
+                    <div class="log-box" id="quest-log">Журнал похода пуст... Выберите задание.</div>
+                `;
+            } else if (tab === 'arena') {
+                area.innerHTML = `
+                    <div class="card">
+                        <h3>⚔️ Зала Славы (PvP / Боты)</h3>
+                        <p>Докажите свою силу в честном поединке против бродячего воина.</p>
+                        <button class="btn btn-danger" onclick="fightEnemy()">Вызвать соперника на дуэль</button>
+                    </div>
+                    <div class="log-box" id="arena-log">Арена ожидает вашего удара...</div>
+                `;
+            } else if (tab === 'profile') {
+                area.innerHTML = `
+                    <div class="card">
+                        <h3>🛡️ Снаряжение Ярла</h3>
+                        <p>Сила атаки: <b>${player.attack}</b></p>
+                        <p>Опыт: <b>${player.exp} / 100</b></p>
+                        <button class="btn" onclick="levelUp()">Улучшить оружие (50 🪙)</button>
+                    </div>
+                `;
+            }
+        }
+
+        function logAction(text) {
+            alert(text);
+            if(text.includes('HP')) {
+                player.hp = Math.min(player.maxHp, player.hp + 20);
+                updateHeader();
+            }
+        }
+
+        function startQuest(damage, reward, message) {
+            if (player.hp <= damage) {
+                alert("У вас слишком мало здоровья для этого похода! Отдохните в таверне.");
+                return;
+            }
+            player.hp -= damage;
+            player.gold += reward;
+            player.exp += 35;
+            
+            if(player.exp >= 100) {
+                player.level++;
+                player.exp = 0;
+                player.maxHp += 20;
+                player.hp = player.maxHp;
+                alert("🎉 Поздравляем! Ваш уровень повышен!");
+            }
+
+            updateHeader();
+            document.getElementById('quest-log').innerHTML = `> ${message}<br>` + document.getElementById('quest-log').innerHTML;
+        }
+
+        function fightEnemy() {
+            let dmgToEnemy = player.attack + Math.floor(Math.random() * 10);
+            let dmgToPlayer = 15 + Math.floor(Math.random() * 15);
+            
+            player.hp = Math.max(0, player.hp - dmgToPlayer);
+            player.gold += 25;
+            updateHeader();
+
+            document.getElementById('arena-log').innerHTML = `> Дуэль выиграна! Противник повержен, добыто 25 монет (-${dmgToPlayer} HP).<br>` + document.getElementById('arena-log').innerHTML;
+            
+            if(player.hp <= 0) {
+                alert("Вы пали в бою! Ваша душа отправляется в Вальхаллу (здоровье восстановлено).");
+                player.hp = player.maxHp;
+                updateHeader();
+            }
+        }
+
+        // Инициализация при старте
+        switchTab('world');
+        updateHeader();
+    </script>
+</body>
+</html>
