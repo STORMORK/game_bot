@@ -1,13 +1,12 @@
-import { Markup } from 'telegraf';
+import { InlineKeyboard } from 'grammy';
 
-export const mainMenu = () =>
-  Markup.inlineKeyboard([
-    Markup.button.callback('⚔️ Налёт на лагерь', 'raid'),
-    Markup.button.callback('🗓️ Ежедневный бонус', 'daily'),
-  ], { columns: 1 }).resize();
-
-export const shopMenu = () =>
-  Markup.inlineKeyboard([
-    Markup.button.callback('🛒 Подзарядить энергию', 'buy_energy'),
-    Markup.button.callback('◀️ Назад', 'back_main'),
-  ], { columns: 1 }).resize();
+export function mainMenu() {
+  return new InlineKeyboard()
+    .text('🏴‍☠️ Статус', 'status')
+    .text('⛏️ Добыча', 'mine')
+    .row()
+    .text('⚔️ Налёт', 'raid')
+    .text('⛵ Улучшить корабль', 'upgrade')
+    .row()
+    .text('📜 Помощь', 'help');
+}
