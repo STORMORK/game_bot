@@ -1,10 +1,10 @@
-# Pirate Telegram Game
+# 🏴‍☠️ Пиратский бот для Telegram
 
-## Setup
-1) Добавь `BOT_TOKEN` в `.env`
-2) `npm i`
-3) `npm run dev`
+Механика: добыча, налёты, улучшение корабля. Данные хранятся в JSON.
 
-## Build/Run
-- `npm run build`
-- `npm start`
+## Установка
+```bash
+npm install
+cp .env.example .env  # вставь токен
+npm run build
+npm start
