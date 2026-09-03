@@ -3,93 +3,112 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Викинги WAP RPG</title>
+    <title>Пираты: Владыки Морей</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
         body {
-            background-color: #d35400;
-            color: #fff8e7;
+            background-color: #0d1b2a; /* Темно-синяя морская тема */
+            color: #e0e1dd;
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 15px;
             text-align: center;
         }
         .header {
-            background-color: #581845;
-            padding: 10px;
-            font-size: 24px;
+            background-color: #1b263b;
+            padding: 12px;
+            font-size: 22px;
             font-weight: bold;
-            border: 2px solid #ffd700;
-            color: #ffd700;
+            border: 2px solid #e0a96d; /* Золотая рамка */
+            color: #f0a500;
             margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
         .banner {
             width: 100%;
             max-width: 400px;
-            border: 3px solid #ffd700;
+            border: 2px solid #e0a96d;
             border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
         }
         .description {
             font-size: 14px;
             line-height: 1.5;
             margin: 15px 0;
-            color: #ffebcd;
+            color: #d4a373;
+            background-color: rgba(27, 38, 59, 0.6);
+            padding: 12px;
+            border-radius: 6px;
+            border-left: 3px solid #f0a500;
         }
         .btn-main {
-            background: linear-gradient(to bottom, #800000, #4a0000);
+            background: linear-gradient(to bottom, #b71c1c, #7f0000); /* Красный пиратский градиент */
             color: #ffffff;
-            border: 2px solid #ffd700;
-            padding: 12px 30px;
+            border: 2px solid #f0a500;
+            padding: 14px 30px;
             font-size: 18px;
             font-weight: bold;
-            border-radius: 20px;
+            border-radius: 25px;
             cursor: pointer;
-            width: 80%;
-            margin: 10px auto;
+            width: 85%;
+            margin: 15px auto;
             display: block;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.4);
+        }
+        .btn-main:active {
+            transform: scale(0.98);
         }
         .nav-menu {
-            background-color: #a04000;
-            border-top: 1px solid #ffd700;
+            background-color: #1b263b;
+            border: 1px solid #e0a96d;
+            border-radius: 6px;
             margin-top: 20px;
-            padding: 10px;
+            padding: 5px;
             text-align: left;
         }
         .nav-item {
-            padding: 8px;
-            border-bottom: 1px solid #d35400;
-            color: #fff;
+            padding: 10px;
+            border-bottom: 1px solid #415a77;
+            color: #e0e1dd;
             text-decoration: none;
             display: block;
+            font-size: 14px;
+        }
+        .nav-item:last-child {
+            border-bottom: none;
         }
     </style>
 </head>
 <body>
 
-    <div class="header">👑 ВИКИНГИ 👑</div>
+    <div class="header">🏴‍☠️ ПИРАТЫ: СЕМЬ МОРЕЙ 🏴‍☠️</div>
 
-    <img src="https://via.placeholder.com/400x180/800000/FFFFFF?text=Viking+Banner" class="banner" alt="Викинги">
+    <!-- Баннер с пиратской тематикой -->
+    <img src="https://via.placeholder.com/400x180/1b263b/f0a500?text=Pirate+Saga+RPG" class="banner" alt="Пираты">
 
     <div class="description">
-        Приветствую тебя, отважный Викинг!<br><br>
-        Ты стоишь на пороге великого путешествия в мир бесстрашных воинов. 
-        Завоевывай могущество, создавай непобедимый клан и рази врагов!
+        Приветствую тебя, отважный Капитан!<br><br>
+        Поднимай черные паруса и отправляйся на поиски сокровищ. 
+        Грабишь торговые шхуны, сражайся с морскими чудовищами, создавай свой корсарский клан и захватывай порты!
     </div>
 
-    <button class="btn-main" onclick="startGame()">Начать игру</button>
+    <button class="btn-main" onclick="startGame()">Поднять паруса!</button>
 
     <div class="nav-menu">
-        <div class="nav-item">🏠 Главная</div>
-        <div class="nav-item">🛡 Кланы</div>
-        <div class="nav-item">⚔️ Арена</div>
+        <div class="nav-item">⚓ Мой Корабль</div>
+        <div class="nav-item">⚔️ Морской Абордаж</div>
+        <div class="nav-item">🏴‍☠️ Пиратская Братва (Кланы)</div>
+        <div class="nav-item">💰 Чёрный Рынок</div>
     </div>
 
     <script>
         const tg = window.Telegram.WebApp;
-        tg.expand();
+        tg.expand(); // Разворачиваем приложение на весь экран
 
         function startGame() {
-            alert("Инициализация персонажа...");
+            alert("Набираем команду и готовим пушки...");
+            // В дальнейшем здесь будет отправка данных на сервер Python
         }
     </script>
 </body>
