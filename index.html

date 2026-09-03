@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Викинги WAP RPG</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        body {
+            background-color: #d35400;
+            color: #fff8e7;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 15px;
+            text-align: center;
+        }
+        .header {
+            background-color: #581845;
+            padding: 10px;
+            font-size: 24px;
+            font-weight: bold;
+            border: 2px solid #ffd700;
+            color: #ffd700;
+            margin-bottom: 15px;
+        }
+        .banner {
+            width: 100%;
+            max-width: 400px;
+            border: 3px solid #ffd700;
+            border-radius: 8px;
+        }
+        .description {
+            font-size: 14px;
+            line-height: 1.5;
+            margin: 15px 0;
+            color: #ffebcd;
+        }
+        .btn-main {
+            background: linear-gradient(to bottom, #800000, #4a0000);
+            color: #ffffff;
+            border: 2px solid #ffd700;
+            padding: 12px 30px;
+            font-size: 18px;
+            font-weight: bold;
+            border-radius: 20px;
+            cursor: pointer;
+            width: 80%;
+            margin: 10px auto;
+            display: block;
+        }
+        .nav-menu {
+            background-color: #a04000;
+            border-top: 1px solid #ffd700;
+            margin-top: 20px;
+            padding: 10px;
+            text-align: left;
+        }
+        .nav-item {
+            padding: 8px;
+            border-bottom: 1px solid #d35400;
+            color: #fff;
+            text-decoration: none;
+            display: block;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">👑 ВИКИНГИ 👑</div>
+
+    <img src="https://via.placeholder.com/400x180/800000/FFFFFF?text=Viking+Banner" class="banner" alt="Викинги">
+
+    <div class="description">
+        Приветствую тебя, отважный Викинг!<br><br>
+        Ты стоишь на пороге великого путешествия в мир бесстрашных воинов. 
+        Завоевывай могущество, создавай непобедимый клан и рази врагов!
+    </div>
+
+    <button class="btn-main" onclick="startGame()">Начать игру</button>
+
+    <div class="nav-menu">
+        <div class="nav-item">🏠 Главная</div>
+        <div class="nav-item">🛡 Кланы</div>
+        <div class="nav-item">⚔️ Арена</div>
+    </div>
+
+    <script>
+        const tg = window.Telegram.WebApp;
+        tg.expand();
+
+        function startGame() {
+            alert("Инициализация персонажа...");
+        }
+    </script>
+</body>
+</html>
